@@ -12,7 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: url('image.png') no-repeat center center/cover;
+            background: url('https://raw.githubusercontent.com/tu_usuario/tu_repositorio/main/image.png') no-repeat center center/cover;
             overflow: hidden;
         }
         #inicio {
@@ -25,16 +25,50 @@
             border-radius: 10px;
             cursor: pointer;
         }
+        #loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 192, 203, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-size: 24px;
+            font-weight: bold;
+            color: red;
+        }
         #bus-container {
             display: none;
             position: absolute;
-            bottom: 10%;
-            left: -200px;
+            bottom: 50%;
+            left: -300px;
+            width: 300px;
+            height: auto;
             animation: moveBus 4s linear forwards;
         }
+        #bus-container img {
+            width: 100%;
+            height: auto;
+        }
         @keyframes moveBus {
-            from { left: -200px; }
-            to { left: 100%; }
+            from { left: -300px; }
+            to { left: 50%; }
+        }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            clip-path: path('M10 30 C 10 -10, 50 -10, 50 15 C 50 25, 30 40, 10 60 C -10 40, -30 25, -30 15 C -30 -10, 10 -10, 10 30');
+            animation: floatUp 3s infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
         }
         #carta-btn {
             display: none;
@@ -63,19 +97,37 @@
 </head>
 <body>
     <button id="inicio">Iniciar</button>
-    <div id="bus-container">🚌</div>
+    <div id="loading-screen">
+        <p>Loading love...</p>
+    </div>
+    <div id="bus-container">
+        <img src="https://raw.githubusercontent.com/tu_usuario/tu_repositorio/main/bus-sticker.png" alt="Bus">
+    </div>
     <button id="carta-btn">Hay una carta para ti, haz click para abrirla</button>
     <div id="carta-container">
         <h1>Mi Cartita</h1>
         <p>Querida, esta es una carta especial solo para ti...</p>
     </div>
     <script>
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.style.left = `${Math.random() * 100}%`;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }
+        
         document.getElementById("inicio").addEventListener("click", function() {
             this.style.display = "none";
-            document.getElementById("bus-container").style.display = "block";
+            document.getElementById("loading-screen").style.display = "flex";
             setTimeout(() => {
-                document.getElementById("carta-btn").style.display = "block";
-            }, 4000);
+                document.getElementById("loading-screen").style.display = "none";
+                document.getElementById("bus-container").style.display = "block";
+                setInterval(createHeart, 500);
+                setTimeout(() => {
+                    document.getElementById("carta-btn").style.display = "block";
+                }, 4000);
+            }, 3000);
         });
         document.getElementById("carta-btn").addEventListener("click", function() {
             document.getElementById("carta-container").style.display = "block";
